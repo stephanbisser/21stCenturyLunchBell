@@ -27,13 +27,13 @@ const VALIDATION_FAILED = !VALIDATION_SUCCEEDED;
  * @param {String} dialogId unique identifier for this dialog instance
  */
 class CheckTruck extends ComponentDialog {
-  constructor(dialogId, connectionString) {
+  constructor(dialogId, connectionString, customVisionAPIKey) {
     super(dialogId);
 
     // validate what was passed in
     if (!dialogId) throw new Error('Missing parameter.  dialogId is required');
     if (!connectionString) throw new Error('Missing parameter.  connectionString is required');
-
+    if (!customVisionAPIKey) throw new Error('Missing parameter.  customVisionAPIKey is required');
     // Add a water fall dialog with 4 steps.
     // The order of step function registration is importent
     // as a water fall dialog executes steps registered in order
@@ -41,6 +41,7 @@ class CheckTruck extends ComponentDialog {
       this.checkTruckStep.bind(this),
     ]));
     this.connectionString = connectionString;
+    this.customVisionAPIKey = customVisionAPIKey;
   }
 
   getInternetAttachment(pictureName, imageUrl) {
@@ -69,12 +70,17 @@ class CheckTruck extends ComponentDialog {
     await step.context.sendActivity(infoMsg);
     // IoT Stuff
     //var targetdevice = 'mobile-MoCaDeSyMo01';
+    // Make sure to change the name of the targetdevice to match your IoT device' name
     var targetdevice = 'mock_iot_device';
     var serviceClient = Client.fromConnectionString(this.connectionString);
 
+    
     var guid = uuid.v1(); 
     var pictureName = guid + "_face.jpeg";
+
     /*
+    var guid = uuid.v1(); 
+    var pictureName = guid + "_face.jpeg";
     var pictureName = '06743a30-d9f7-11e8-ae6c-393ddd48f0a4.jpeg';
     */
     
@@ -123,7 +129,7 @@ class CheckTruck extends ComponentDialog {
         method: 'POST',
         uri: "https://southcentralus.api.cognitive.microsoft.com/customvision/v2.0/Prediction/4968e8c6-afd9-4502-8176-fede44631ba4/url",
         headers: {
-          "Prediction-Key": "yourCustomVisionKey"
+          "Prediction-Key": this.customVisionAPIKey
         },
         body: {
             "Url": imageUrl

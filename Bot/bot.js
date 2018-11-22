@@ -73,11 +73,13 @@ class LunchBellBot {
    * @param {UserState} userState property accessor
    * @param {BotConfiguration} botConfig contents of the .bot file
    */
-  constructor(conversationState, userState, botConfig, connectionString) {
+  constructor(conversationState, userState, botConfig, connectionString, customVisionAPIKey, faceAPIKey) {
     if (!conversationState) throw new Error('Missing parameter.  conversationState is required');
     if (!userState) throw new Error('Missing parameter.  userState is required');
     if (!botConfig) throw new Error('Missing parameter.  botConfig is required');
     if (!connectionString) throw new Error('Missing parameter.  connectionString is required here');
+    if (!faceAPIKey) throw new Error('Missing parameter.  faceAPIKey is required here');
+    if (!customVisionAPIKey) throw new Error('Missing parameter.  customVisionAPIKey is required here');
     // Add the LUIS recognizer.
     const luisConfig = botConfig.findServiceByNameOrId(LUIS_CONFIGURATION);
     if (!luisConfig || !luisConfig.appId) throw ('Missing LUIS configuration. Please follow README.MD to create required LUIS applications.\n\n');
@@ -97,11 +99,10 @@ class LunchBellBot {
     this.dialogs = new DialogSet(this.dialogState);
     // Add the Greeting dialog to the set
     this.dialogs.add(new GreetingDialog(GREETING_DIALOG, this.userProfileAccessor));
-    this.dialogs.add(new FaceDialog(FACE_DIALOG, connectionString));
-    this.dialogs.add(new CheckTruckDialog(CHECKTRUCK_DIALOG, connectionString));
+    this.dialogs.add(new FaceDialog(FACE_DIALOG, connectionString, faceAPIKey));
+    this.dialogs.add(new CheckTruckDialog(CHECKTRUCK_DIALOG, connectionString, customVisionAPIKey));
     this.dialogs.add(new JokeDialog(JOKE_DIALOG));
     this.dialogs.add(new PredictDialog(PREDICT_DIALOG));
-    this.dialogs.add(new PictureDialog(PICTURE_DIALOG, this.userProfileAccessor));
 
     this.conversationState = conversationState;
     this.userState = userState;

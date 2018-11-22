@@ -26,13 +26,13 @@ const VALIDATION_SUCCEEDED = true;
  * @param {String} dialogId unique identifier for this dialog instance
  */
 class Face extends ComponentDialog {
-  constructor(dialogId, connectionString) {
+  constructor(dialogId, connectionString, faceAPIKey) {
     super(dialogId);
 
     // validate what was passed in
     if (!dialogId) throw new Error('Missing parameter.  dialogId is required');
     if (!connectionString) throw new Error('Missing parameter.  connectionString is required');
-
+    if (!faceAPIKey) throw new Error('Missing parameter.  faceAPIKey is required');
     // Add a water fall dialog with 4 steps.
     // The order of step function registration is importent
     // as a water fall dialog executes steps registered in order
@@ -40,6 +40,9 @@ class Face extends ComponentDialog {
       this.checkFaceStep.bind(this),
     ]));
     this.connectionString = connectionString;
+    this.faceAPIKey = faceAPIKey;
+    console.log("FACE");
+    console.log(this.faceAPIKey);
   }
   
   getInternetAttachment(pictureName, imageUrl) {
@@ -61,13 +64,17 @@ class Face extends ComponentDialog {
 
     // IoT Stuff
     //var targetdevice = 'mobile-MoCaDeSyMo01';
+    // Make sure to change the name of the targetdevice to match your IoT device' name
     var targetdevice = 'mock_iot_device';
     var serviceClient = Client.fromConnectionString(this.connectionString);
 
+    
     var guid = uuid.v1(); 
     var pictureName = guid + "_face.jpeg";
     /*
-        var pictureName = "16e6fb50-ec08-11e8-9981-338b7412aa78_face.jpeg";
+    var guid = uuid.v1(); 
+    var pictureName = guid + "_face.jpeg";
+    var pictureName = "16e6fb50-ec08-11e8-9981-338b7412aa78_face.jpeg";
     */
 
     var cmd = "pic#" + pictureName;
@@ -114,7 +121,7 @@ class Face extends ComponentDialog {
         method: 'POST',
         uri: "https://westeurope.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=false&returnFaceLandmarks=false&returnFaceAttributes=age,gender",
         headers: {
-            "Ocp-Apim-Subscription-Key": "yourFaceApiKey"
+            "Ocp-Apim-Subscription-Key": this.faceAPIKey
         },
         body: {
             "Url": imageUrl

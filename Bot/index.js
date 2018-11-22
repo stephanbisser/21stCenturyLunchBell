@@ -47,7 +47,12 @@ const endpointConfig = botConfig.findServiceByNameOrId(BOT_CONFIGURATION);
 // Get IoT Connection String
 let connectionString;
 connectionString = process.env.IoTHubConnection;
-
+// Get CustomVisionAPIKey
+let customVisionAPIKey;
+customVisionAPIKey = process.env.CustomVisionAPIKey;
+// Get FaceAPIKey
+let faceAPIKey;
+faceAPIKey = process.env.FaceAPIKey;
 
 // Create adapter.
 // See https://aka.ms/about-bot-adapter to learn more about .bot file its use and bot configuration .
@@ -100,7 +105,7 @@ userState = new UserState(memoryStorage);
 // Create the main dialog.
 let bot;
 try {
-    bot = new LunchBellBot(conversationState, userState, botConfig, connectionString);
+    bot = new LunchBellBot(conversationState, userState, botConfig, connectionString, customVisionAPIKey, faceAPIKey);
     
 } catch (err) {
     console.error(`[botInitializationError]: ${err}`);
