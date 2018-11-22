@@ -1,0 +1,46 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "Image",
+      "url": "https://lunchbellbot.blob.core.windows.net/res/food-truck.png?st=2018-06-14T19%3A31%3A51Z&se=2022-06-15T19%3A31%3A00Z&sp=rl&sv=2017-07-29&sr=b&sig=Bt1csmC1WaZejAI4aTGiL11FaX9bPHLxTsRbLPNqfmY%3D",
+      "size": "stretch"
+    },
+    {
+      "type": "TextBlock",
+      "spacing": "medium",
+      "size": "default",
+      "weight": "bolder",
+      "text": "Hey!",
+      "wrap": true,
+      "maxLines": 0
+    },
+    {
+      "type": "TextBlock",
+      "size": "default",
+      "isSubtle": "yes",
+      "text": "I'm the 21st century lunchbell bot. If you want to I can take a picture and check if the food truck is here...",
+      "wrap": true,
+      "maxLines": 0
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.Submit",
+      "title": "Check for the food truck",
+      "data": "Check for food truck"
+    },
+    {
+      "type": "Action.Submit",
+      "title": "Predict food truck arrival time",
+      "data": "When will the truck arrive"
+    },
+    {
+      "type": "Action.Submit",
+      "title": "Analyze your face",
+      "data": "Analyze the face"
+    }
+  ]
+}
